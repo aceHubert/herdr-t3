@@ -26,6 +26,7 @@ Herdr App 的一个安静、近似 T3 Code 的窗口：左侧 256px 侧栏，可
 
 ## 它怎么表现
 
+- **终端编号**：窗格标题和 Agents 列表（包括子 agent）在名称前显示终端地址（`t19` 或 `machine/t19`）。名称本身等于地址时只显示一次；程序修改终端标题后，编号仍会保留。
 - **名字**，各处（focus 卡片、agents 列表、标签、窗格标题）一条规则，写在 `mods/t3-focus/name.js`，用到它的 mod 各放一份副本：先用 Pi 会话名（`pi.session` 标签）；agent 再看有人命名过的标签名；然后是有意义的终端标题（不是路径、不含 `user@host`、不是程序自己的名字）；最后是程序名。
 - **agent 状态**，各处（agents 列表、标签、窗格标题、focus 卡片）标记一致：working：`working` 色转圈；blocked：14px 圆角 `!` 徽章，底色为 15% 不透明的 `blocked`；done：7px `done` 圆点（Focus 里是绿色 `Done`）；idle：agents 列表里是圆环，其余位置不显示。父级连同仍在运行的子 agent 一起判断，规则写在 `mods/t3-focus/tree.js`，用到它的 mod 各放一份副本：自己或任一子 agent blocked 即 blocked（子 agent 的 `error` 视为 blocked）；否则自己有未读的 done 即 done；否则自己或任一子 agent working 即 working；否则用自己的状态。子 agent 的 done 是父级的消息，不算它自己的。
 - **侧栏模式**：品牌栏按钮或 `cmd-shift-b`（`t3-chrome.sidebar`）对 stack `sidebar-lists` 执行 `layout.select`（`lists` / `focus`）。显示 Focus 时，标签栏和侧栏开关的计数里不再显示已 Settle agent 的完成圆点。
@@ -33,6 +34,7 @@ Herdr App 的一个安静、近似 T3 Code 的窗口：左侧 256px 侧栏，可
 - **Agents**：单击执行 `agent.focus`（标签模式下聚焦那个窗格；Agent 模式下选定显示哪个 agent），Focus 卡片相同。和 Herdr 自带的 agents 列表一样，每行在状态前显示当前状态持续的时间（`<1m`、`5m`、`3h`、`2d`），悬停时这个位置换成置顶按钮（布局不动）；父级在时间前显示折叠箭头（默认折叠，折叠后带淡色数量）；blocked 或出错的子 agent 仍显示在它下面，缩进一级。已结束 agent 的折叠记录会被清掉。你正在看的 done agent 留在 Done 组，直到你离开。
 - **Focus / Settle**：悬停已结束的卡片出现 `✓ Settle`；悬停已 Settle 的行出现撤销箭头；有新工作（working、blocked，或 Settle 后又结束过一轮）自动回来。`cmd-shift-s`（`t3-focus.settle`）对当前查看的 agent 做同样的事：已结束且未置顶的，像按钮一样 Settle 并跳到下一张；已 Settle 的则取回。不做自动 Settle。拖动照 T3 侧栏（`Sidebar.drag.ts`、`Sidebar.pointer.ts`）：按住卡片或行移动 6px 即拿起（Working 卡片、Settle 变更还没从 Core 回来的行除外）。拿起的副本（`selected` 底色、1px `accent` 边框、大阴影）只上下移动，按下的位置始终在鼠标下，限制在列表内、Pinned 标签以下；右上角换成松开后动作的标记：`Pin`、`Unpin`、`Settle`、`Un-settle`（accent 描边和 10% 底色），原地不动时不显示。只在拿起期间，24px 的 `Pinned` 和 `Active` 标签（12px 中粗加 1px 细线，作为目标时 `accent`）以 150ms ease-out 的高度过渡展开，Settled 标题也会显示（即使为空），平时 `foreground`，作为目标时 `accent`。每行放在 lane 里：上方一个间隙、行本身和 2px 间距，最后一行之后再有一个间隙；拿起的行移向别处后原位收起。落点的间隙张开到目标分区的行高：Pinned 和 Active 为卡片高 + 2（拿起的卡片自身高度，或最近测得的卡片高度），Settled 为 30px。Pinned 保留手动顺序（置顶卡片上半部放在它上面，下半部放在下面）；Active 和 Settled 按各自排序（取消 Settle 或 Settle 后排最上，取消置顶回到按时间的位置）。Active 或 Settled 为空、或 Settled 折叠时，显示 36px 虚线占位，作为目标时 accent。Settled 始终一页：移出一行时下一行补上，Settle 进来一行时最后一行隐藏。在侧栏内任意处松开都落在间隙处；Herdr 不上报侧栏外的松手，所以按离开方向决定：从上下边缘离开（按最后的鼠标位置取最近的边）就按标记落下，和 T3 越过列表两端仍保留最后目标一致；Esc（只在拿起期间侧栏持有键盘）、从左右两侧离开或拿起的行从列表消失都会放回原处；松开不会打开那一行。Settle 当前正在看的 agent 时切到下面一张卡片，到底则从顶部绕回，同 T3。划选：按住卡片的 `✓ Settle` 或已 Settle 行的撤销箭头划过同一分区的多行，标记整段，松开即全部 Settle（或取回）。置顶卡片不论状态都按置顶顺序留在顶部，空间头像后有 pin 图标，不提供 Settle 按钮。置顶存在共享状态 `agents.pins`，与 t3-agents 共用。
 - **标签**：单击选中，双击改名，拖动排序，右键菜单，滚轮切换上/下一个标签（Agent 模式下切换 agent）。
+- **关闭标签**：点击标签的 `×` 时，只要其中任一终端上报了 agent 状态，或前台程序不是已识别的 shell，就先确认；未知程序也需要确认。普通 shell 标签直接关闭，但仍遵循 Herdr 自带的最后一个标签确认。快捷键和右键菜单保持 Herdr 默认的关闭行为；shell 中的后台任务可能无法识别。
 - **Agent 模式**：切换按钮或 `cmd-shift-a`（`t3-tabs.view`）对 stack `view` 执行 `layout.select`（`main` / `agent`）。它让键盘停在这个 agent 上，所以会落到看不见的地方的操作都会退回标签模式：当前 space 新出现的 shell 或 mod 窗格（分屏、新标签；随后对它执行 `pane.focus`）、从新建菜单打开的标签（`t3-new-menu` 先退出 Agent 模式）、用键盘把焦点移到 shell。新出现的 agent 窗格不抢画面；用键盘把焦点移到 agent 窗格时改为显示那个 agent。
 - 置顶、折叠、排序、筛选和收纳区状态按屏幕保存（`localStorage` / 共享状态 `agents.sort`、`space.colors`）。
 
