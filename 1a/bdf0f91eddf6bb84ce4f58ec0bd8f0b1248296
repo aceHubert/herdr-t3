@@ -1,0 +1,19 @@
+mods/t3-tabs/main.js
+  s_f85e1773257e05::t_98f75086c0e021 51-52
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1abdf0f91eddf6bb84ce4f58ec0bd8f0b1248296",
+  "prompts": {},
+  "sessions": {
+    "s_f85e1773257e05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f28-485b-7fc1-ad0b-ce8065147c1d",
+        "model": "gpt-6.1-terra"
+      },
+      "human_author": "hubert <hubert@lejian.com>"
+    }
+  }
+}
