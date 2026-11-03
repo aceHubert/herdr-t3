@@ -1,0 +1,23 @@
+RECIPE.zh-CN.md
+  s_f85e1773257e05::t_287b89d00ba7a7 29,37
+mods/t3-tabs/main.js
+  s_f85e1773257e05::t_81797ac0737f19 51-52
+RECIPE.md
+  s_f85e1773257e05::t_287b89d00ba7a7 27,35
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "51b1e88248b02f5a782a8368f341dd80d55c8f06",
+  "prompts": {},
+  "sessions": {
+    "s_f85e1773257e05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f28-485b-7fc1-ad0b-ce8065147c1d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "hubert <hubert@lejian.com>"
+    }
+  }
+}
