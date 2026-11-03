@@ -1,0 +1,23 @@
+mods/t3-agents/main.js
+  s_f85e1773257e05::t_a67dd879da392e 183,335
+mods/t3-pane/main.js
+  s_f85e1773257e05::t_a67dd879da392e 73
+mods/t3-tabs/main.js
+  s_f85e1773257e05::t_462c7d53687488 46-60,143
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "98264221f3f0bf4fd5b288987fbb0485e200fcfa",
+  "prompts": {},
+  "sessions": {
+    "s_f85e1773257e05": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a19f28-485b-7fc1-ad0b-ce8065147c1d",
+        "model": "gpt-6.1-sol"
+      },
+      "human_author": "hubert <hubert@lejian.com>"
+    }
+  }
+}
