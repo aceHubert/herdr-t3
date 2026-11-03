@@ -48,8 +48,8 @@ export default class Tabs extends View {
     const running = panes().some(p => p.tab === id && p.terminal && (p.status != null || p.program?.agent || p.program?.shell !== true));
     if (running) {
       openOverlay({ mod: "confirm", kind: "dialog", width: 440, height: 200, props: {
-        title: "关闭标签页？ / Close tab?",
-        detail: "标签页中有运行中的程序。关闭后，其中的终端和程序会结束。\nThis tab contains running programs. Closing it ends its terminals and programs.",
+        title: "Close tab?",
+        detail: "This tab contains running programs. Closing it ends its terminals and programs.",
         command: { name: "tab.close", args: { id, confirmed: true } }
       } });
     } else {
