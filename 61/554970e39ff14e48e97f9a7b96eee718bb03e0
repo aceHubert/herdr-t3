@@ -1,5 +1,9 @@
 mods/t3-tabs/main.js
   s_f85e1773257e05::t_81797ac0737f19 51-52
+RECIPE.md
+  s_f85e1773257e05::t_7c66470d9c3667 27-29
+RECIPE.zh-CN.md
+  s_f85e1773257e05::t_7c66470d9c3667 29-31
 ---
 {
   "schema_version": "authorship/3.0.0",
