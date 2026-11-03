@@ -42,6 +42,21 @@ export default class Tabs extends View {
     });
   }
 
+  closeTab(id) {
+    // 点击时读取当前状态；未知程序也先确认，避免误关未识别的任务。
+    const running = panes().some(p => p.tab === id && p.terminal && (p.status != null || p.program?.agent || p.program?.shell !== true));
+    if (running) {
+      openOverlay({ mod: "confirm", kind: "dialog", width: 440, height: 200, props: {
+        title: "关闭标签页？",
+        detail: "标签页中有运行中的程序。关闭后，其中的终端和程序会结束。",
+        command: { name: "tab.close", args: { id, confirmed: true } }
+      } });
+    } else {
+      // 不传 confirmed，保留 Herdr 关闭 Space 最后一个标签页时的确认。
+      run("tab.close", { id });
+    }
+  }
+
   // With the sidebar hidden, its toggle also says how the agents are doing, with the sidebar's own marks.
   // Idle agents aren't counted: nothing to look at.
   sidebarToggle(t, stop) {
@@ -118,7 +133,7 @@ export default class Tabs extends View {
         .when(c.status === "working", el => el.child(svg("mods/workspace-chrome/spinner.svg").size(12).flex_none().text_color(t.working).spin(900)))
         .when(c.status === "blocked", el => el.child(blockedMark(t)))
         .when(c.status === "done" && live.some(a => a.tab === c.id && a.status === "done"), el => el.child(div().size(7).flex_none().rounded_full().bg(t.done)))
-        .when(c.active, el => el.child(div().id(`close-${c.id}`).text_color(t.dim).on_mouse_down("left", stop).on_click((_e, cx) => { cx.stop_propagation(); run("tab.close", { id: c.id }); }).child(svg("mods/pane/close.svg").size(12))));
+        .when(c.active, el => el.child(div().id(`close-${c.id}`).text_color(t.dim).on_mouse_down("left", stop).on_click((_e, cx) => { cx.stop_propagation(); this.closeTab(c.id); }).child(svg("mods/pane/close.svg").size(12))));
     };
     const root = layout(), sidebar = find(root, "sidebar"), w = window();
     // Old saved rails and a dragged-narrow sidebar can be smaller than the window buttons.
